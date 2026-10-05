@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<!-- SBK App Hub v4 (การ์ดสีสด, Responsive, เอฟเฟคก่อนเข้า; v3: เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
+<!-- SBK App Hub v5 (ใช้งานล่าสุดแบบชิปเล็ก; v4: การ์ดสีสด, Responsive, เอฟเฟคก่อนเข้า; v3: เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SBK App Hub</title>
@@ -158,6 +158,16 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 @media(min-width:900px){.wrap{padding:34px 32px 60px}.hero h1{font-size:2.3rem}.logo{width:76px;height:76px}.ring{width:190px;height:190px}.slogo{width:172px;height:172px}.rip{width:190px;height:190px}.splash h2{font-size:2.3rem}}
 @media(max-width:380px){.logo{width:52px;height:52px}.hero h1{font-size:1.35rem}.hero p{font-size:.8rem}.card{min-height:0}}
 @media(max-height:520px){.ring,.rip{width:96px;height:96px}.slogo{width:84px;height:84px}.splash h2{font-size:1.3rem}.ssub{display:none}.clock{margin-top:2px;font-size:2.3rem}.step{margin-top:6px}.pbar{margin-top:6px}.rwrap{margin-bottom:2px}}
+/* ===== v5: ใช้งานล่าสุดแบบชิปเล็ก ===== */
+.sec{user-select:none;-webkit-user-select:none}
+.sec.sm{font-size:.82rem;margin:14px 0 6px;color:var(--sub);font-weight:500}
+.recs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.recs::-webkit-scrollbar{display:none}
+.rec{display:inline-flex;align-items:center;gap:8px;flex:none;min-height:36px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 14px 4px 4px;font:500 .82rem 'Prompt',sans-serif;cursor:pointer;backdrop-filter:blur(8px);transition:.2s}
+.rec .ri{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.9rem;background:var(--g)}
+@media(hover:hover){.rec:hover{border-color:var(--c);transform:translateY(-2px)}}
+.rec:active{transform:scale(.96)}
+.intro .recs{animation:rise .7s .15s both}
 </style>
 </head>
 <body>
@@ -193,8 +203,8 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
   </div>
 
   <div id="recentSec" style="display:none">
-    <div class="sec">🕘 ใช้งานล่าสุด</div>
-    <div class="grid" id="recentGrid"></div>
+    <div class="sec sm">🕘 ใช้งานล่าสุด</div>
+    <div class="recs" id="recentGrid"></div>
   </div>
 
   <div class="sec">📱 แอปทั้งหมด <small id="cnt"></small></div>
@@ -284,6 +294,8 @@ function cardHTML(a,i=0){
     <div class="ico">${esc(a.ico)}</div><span class="tag">${esc(a.cat)}</span>
     <h3>${esc(a.name)}</h3><p>${esc(a.desc)}</p><span class="go">เปิดใช้งาน <b>→</b></span></button>`;
 }
+/* ชิปเล็กสำหรับ "ใช้งานล่าสุด" — ต่างจากการ์ดแอปจริงชัดเจน */
+function recHTML(a){return `<button class="rec" data-id="${a.id}" style="--g:${a.g};--c:${a.c}"><span class="ri">${esc(a.ico)}</span>${esc(a.name)}</button>`}
 function render(){
   const all=allApps(),fv=favs();
   const cats=['ทั้งหมด',...new Set(all.map(a=>a.cat))];
@@ -294,9 +306,9 @@ function render(){
   $('grid').innerHTML=list.map(cardHTML).join('');
   $('empty').style.display=list.length?'none':'block';
   $('cnt').textContent=list.length+' รายการ';
-  const rec=store.get('sbk_hub_recent',[]).map(id=>all.find(a=>a.id===id)).filter(Boolean).slice(0,3);
+  const rec=store.get('sbk_hub_recent',[]).map(id=>all.find(a=>a.id===id)).filter(Boolean).slice(0,5);
   $('recentSec').style.display=rec.length&&!kw&&cat==='ทั้งหมด'?'block':'none';
-  $('recentGrid').innerHTML=rec.map(cardHTML).join('');
+  $('recentGrid').innerHTML=rec.map(recHTML).join('');
 }
 
 /* ===== 4. เปิด/ปิดแอป ===== */
@@ -372,7 +384,7 @@ document.addEventListener('click',e=>{
   if(dl){const id=dl.dataset.del;
     if(pendDel!==id){pendDel=id;toast('กด ✕ อีกครั้งเพื่อยืนยันการลบแอปนี้');setTimeout(()=>pendDel=null,3000);return}
     store.set('sbk_hub_custom',store.get('sbk_hub_custom',[]).filter(a=>a.id!==id));pendDel=null;render();toast('ลบแอปแล้ว');return}
-  const card=e.target.closest('.card'); if(card) return openApp(card.dataset.id);
+  const card=e.target.closest('.card,.rec'); if(card) return openApp(card.dataset.id);
   const chip=e.target.closest('.chip'); if(chip){cat=chip.dataset.c;render()}
 });
 $('q').addEventListener('input',e=>{kw=e.target.value.trim().toLowerCase();render()});
