@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<!-- SBK App Hub v3 (เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
+<!-- SBK App Hub v4 (การ์ดสีสด, Responsive, เอฟเฟคก่อนเข้า; v3: เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SBK App Hub</title>
@@ -23,7 +23,7 @@
 [data-theme=dark]{--ink:#e8eaff;--sub:#94a3b8;--card:#1e2140cc;--line:#2f3459;--bg1:#0b0d1f;--bg2:#06201f;--bg3:#150f2e;--vbg:#0f1226;--bd:#ffffff14;color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
-body{font-family:'Sarabun','Prompt',sans-serif;line-height:1.7;color:var(--ink);min-height:100vh;
+body{font-family:'Sarabun','Prompt',sans-serif;line-height:1.7;color:var(--ink);min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;
   background:linear-gradient(135deg,var(--bg1),var(--bg3) 50%,var(--bg2));background-attachment:fixed;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
@@ -31,7 +31,7 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 .b1{width:320px;height:320px;background:#818cf8;top:-80px;left:-80px}
 .b2{width:300px;height:300px;background:#2dd4bf;bottom:-80px;right:-60px}
 .b3{width:220px;height:220px;background:#f9a8d4;top:40%;right:-80px}
-.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:20px 16px 40px}
+.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:20px 16px 40px}
 /* ส่วนหัว */
 .hero{display:flex;align-items:center;gap:14px;margin-bottom:18px}
 .logo{width:64px;height:64px;border-radius:18px;box-shadow:0 10px 24px #4f46e555;flex:none;overflow:hidden}
@@ -49,12 +49,10 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 .chip.on{background:linear-gradient(90deg,#4f46e5,#7c3aed);color:#fff;border-color:transparent;box-shadow:0 6px 14px #4f46e544}
 .sec{font:600 1.05rem 'Prompt';margin:18px 0 10px;display:flex;align-items:center;gap:8px}
 .sec small{font:400 .8rem 'Sarabun';color:var(--sub)}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:16px}
 .card{position:relative;display:flex;flex-direction:column;gap:10px;text-align:left;border:1px solid var(--bd);background:var(--card);backdrop-filter:blur(10px);border-radius:22px;padding:18px;cursor:pointer;font:inherit;color:inherit;
   box-shadow:0 8px 24px #1e1b4b14;transition:transform .2s,box-shadow .2s;overflow:hidden}
-.card:hover{transform:translateY(-4px);box-shadow:0 16px 34px #1e1b4b26}
+@media(hover:hover){.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px var(--s)}.card:hover .ico{transform:rotate(-6deg) scale(1.1)}.card:hover .go b{transform:translateX(5px)}}
 .card:active{transform:scale(.98)}
 .card::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:var(--g);opacity:.12}
 .ico{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:1.7rem;background:var(--g);box-shadow:0 8px 16px var(--s)}
@@ -100,8 +98,8 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 .mrow .pri{background:linear-gradient(90deg,#4f46e5,#7c3aed);color:#fff;border:0}
 /* Splash */
 .splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;text-align:center;color:#fff;cursor:pointer;
-  background:radial-gradient(circle at 30% 20%,#312e81,#0f0b2e 60%,#021b1a);opacity:0;visibility:hidden;transition:opacity .7s,visibility .7s,transform .7s;transform:scale(1.04)}
-.splash.on{opacity:1;visibility:visible;transform:none}
+  background:radial-gradient(circle at 30% 20%,#312e81,#0f0b2e 60%,#021b1a);opacity:0;visibility:hidden;transition:opacity .8s,visibility .8s,transform .8s,filter .8s;transform:scale(1.6);filter:blur(12px)}
+.splash.on{opacity:1;visibility:visible;transform:none;filter:none}
 .aur{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;animation:fl 9s ease-in-out infinite alternate}
 .a1{width:380px;height:380px;background:#6366f1;top:-10%;left:-10%}
 .a2{width:340px;height:340px;background:#14b8a6;bottom:-12%;right:-8%;animation-delay:-3s}
@@ -126,6 +124,40 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 .hint{font-size:.85rem;color:#a5b4fc;margin-top:6px;animation:pl 2s ease-in-out infinite}
 @keyframes pl{50%{opacity:.4}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* ===== v4: การ์ดสีสด ===== */
+.card{background:linear-gradient(160deg,var(--card) 35%,color-mix(in srgb,var(--c) 16%,transparent));border-radius:24px;padding:20px 18px 18px;min-height:210px}
+.card::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:var(--g)}
+.ico{width:62px;height:62px;border-radius:20px;font-size:1.9rem;box-shadow:0 10px 22px var(--s),inset 0 0 0 2px #ffffff55;transition:transform .25s}
+.card h3{font-size:1.1rem}
+.go{display:flex;align-items:center;justify-content:center;gap:6px;position:relative;overflow:hidden;color:#fff;background:var(--g);padding:11px 14px;border-radius:14px;box-shadow:0 8px 18px var(--s);font:600 .92rem 'Prompt',sans-serif}
+.go b{display:inline-block;transition:transform .2s}
+.go::after{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(90deg,transparent,#fff7,transparent);transform:skewX(-20deg);animation:sheen 3.6s ease-in-out infinite;animation-delay:calc(var(--i,0)*.45s)}
+@keyframes sheen{0%,60%{left:-70%}100%{left:130%}}
+[data-theme=dark] .card{box-shadow:0 8px 28px #0006,0 0 0 1px color-mix(in srgb,var(--c) 35%,transparent)}
+/* ===== v4: เอฟเฟคก่อนเข้า Dashboard ===== */
+@keyframes rise{from{opacity:0;transform:translateY(28px) scale(.95)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.3) rotate(-90deg)}to{opacity:1;transform:none}}
+.intro .hero{animation:rise .7s both}.intro .tools{animation:rise .7s .12s both}
+.intro .card{animation:rise .65s calc(var(--i,0)*85ms + .2s) both}
+.rwrap{position:relative;display:grid;place-items:center;margin-bottom:10px}
+.splash.on .rwrap{animation:pop 1s cubic-bezier(.2,1.4,.4,1) both}
+.rip{position:absolute;width:158px;height:158px;border-radius:50%;border:2px solid #a5b4fc;opacity:0;animation:rp 2.8s ease-out infinite}
+.r2{animation-delay:.9s}.r3{animation-delay:1.8s}
+@keyframes rp{from{transform:scale(1);opacity:.7}to{transform:scale(2.6);opacity:0}}
+.splash.on h2{animation:rise .8s .25s both}.splash.on .ssub{animation:rise .8s .4s both}
+.splash.on .clock{animation:sh 6s linear infinite,rise .9s .5s both}.splash.on .sdate{animation:rise .8s .7s both}
+.step{margin-top:16px;font:500 .92rem 'Prompt',sans-serif;color:#99f6e4;min-height:1.5em}
+.pbar{margin-top:8px}
+.pt{position:absolute;bottom:-12px;border-radius:50%;opacity:0;animation:up linear infinite}
+@keyframes up{10%{opacity:.85}to{transform:translate(var(--dx),-110vh);opacity:0}}
+/* ===== v4: Responsive / iOS / Android ===== */
+.search input,.mbox input{font-size:16px} /* ป้องกัน iOS ซูมหน้าเองตอนโฟกัสช่องกรอก */
+.chip,.ib,.bar button,.bar a{min-height:40px}
+#viewer{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom);height:100%}
+.frame iframe{-webkit-overflow-scrolling:touch}
+@media(min-width:900px){.wrap{padding:34px 32px 60px}.hero h1{font-size:2.3rem}.logo{width:76px;height:76px}.ring{width:190px;height:190px}.slogo{width:172px;height:172px}.rip{width:190px;height:190px}.splash h2{font-size:2.3rem}}
+@media(max-width:380px){.logo{width:52px;height:52px}.hero h1{font-size:1.35rem}.hero p{font-size:.8rem}.card{min-height:0}}
+@media(max-height:520px){.ring,.rip{width:96px;height:96px}.slogo{width:84px;height:84px}.splash h2{font-size:1.3rem}.ssub{display:none}.clock{margin-top:2px;font-size:2.3rem}.step{margin-top:6px}.pbar{margin-top:6px}.rwrap{margin-bottom:2px}}
 </style>
 </head>
 <body>
@@ -134,10 +166,11 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 <div class="splash on" id="splash">
   <div class="aur a1"></div><div class="aur a2"></div><div class="aur a3"></div>
   <div class="sbox">
-    <div class="ring"><div class="slogo" id="sLogo"></div></div>
+    <div class="rwrap"><i class="rip"></i><i class="rip r2"></i><i class="rip r3"></i><div class="ring"><div class="slogo" id="sLogo"></div></div></div>
     <h2>SBK App Hub</h2><p class="ssub">ศูนย์รวมระบบปฏิบัติการ · Seacon Bangkae</p>
     <div class="clock" id="sClock">--:--:--</div>
     <div class="sdate" id="sDate"></div>
+    <div class="step" id="sStep"></div>
     <div class="pbar"><i id="sBar"></i></div>
     <div class="hint" id="sHint"></div>
   </div>
@@ -211,7 +244,7 @@ const APPS=[
 const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const allApps=()=>[...APPS,...store.get('sbk_hub_custom',[])];
 const urlOf=a=>a.url||BASE+a.path;
-const SPLASH_MS=3000;          // แสดงโลโก้ก่อนเข้าอัตโนมัติ (2-4 วินาที)
+const SPLASH_MS=3500;          // แสดงโลโก้ก่อนเข้าอัตโนมัติ (2-4 วินาที)
 const IDLE_MS=4*60*1000;       // ไม่มีการใช้งานหน้า Hub นานเท่านี้ → กลับหน้าพักจอ (3-5 นาที)
 const $=id=>document.getElementById(id);
 let cat='ทั้งหมด',kw='',slowT=null;
@@ -243,13 +276,13 @@ function setupIcons(){
 /* ===== 3. แสดงผลการ์ด ===== */
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const favs=()=>store.get('sbk_hub_fav',[]);
-function cardHTML(a){
+function cardHTML(a,i=0){
   const f=favs().includes(a.id);
-  return `<button class="card" data-id="${a.id}" style="--g:${a.g};--s:${a.s};--c:${a.c}">
+  return `<button class="card" data-id="${a.id}" style="--g:${a.g};--s:${a.s};--c:${a.c};--i:${i}">
     <span class="star ${f?'on':''}" data-star="${a.id}" title="ปักหมุด">${f?'★':'☆'}</span>
     ${a.custom?`<span class="del" data-del="${a.id}" title="ลบแอปนี้">✕</span>`:''}
     <div class="ico">${esc(a.ico)}</div><span class="tag">${esc(a.cat)}</span>
-    <h3>${esc(a.name)}</h3><p>${esc(a.desc)}</p><span class="go">เปิดใช้งาน →</span></button>`;
+    <h3>${esc(a.name)}</h3><p>${esc(a.desc)}</p><span class="go">เปิดใช้งาน <b>→</b></span></button>`;
 }
 function render(){
   const all=allApps(),fv=favs();
@@ -293,7 +326,7 @@ if(!document.fullscreenEnabled) $('fs').style.display='none';
 window.addEventListener('popstate',()=>{const id=location.hash.slice(1);id?openApp(id,false):closeApp(false)});
 
 /* ===== 5. Splash / พักจอ / เวลา ===== */
-let enterT=null,idleT=null;
+let enterT=null,idleT=null,stepT=[];
 const splashOn=()=>$('splash').classList.contains('on');
 const vOpen=()=>$('viewer').classList.contains('open');
 function tick(){
@@ -304,13 +337,19 @@ function tick(){
   $('dFull').textContent=d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
 }
 function showSplash(lock){ // lock=true คือหน้าพักจอ (รอแตะ), false คือหน้าเปิดแอป (เข้าเองอัตโนมัติ)
-  clearTimeout(enterT);clearTimeout(idleT);tick();
+  clearTimeout(enterT);clearTimeout(idleT);stepT.forEach(clearTimeout);stepT=[];tick();
   $('splash').classList.add('on');
   const bar=$('sBar');bar.parentNode.style.display=lock?'none':'block';
   $('sHint').textContent=lock?'แตะหน้าจอหรือกดปุ่มใดก็ได้ เพื่อกลับเข้าใช้งาน':'กำลังเข้าสู่ระบบ... แตะเพื่อข้าม';
-  if(!lock){bar.style.animation='none';void bar.offsetWidth;bar.style.animation='fill '+SPLASH_MS+'ms linear forwards';enterT=setTimeout(hideSplash,SPLASH_MS)}
+  if(!lock){bar.style.animation='none';void bar.offsetWidth;bar.style.animation='fill '+SPLASH_MS+'ms linear forwards';enterT=setTimeout(hideSplash,SPLASH_MS);
+    const st=['⚙️ กำลังเตรียมระบบ...','📡 เชื่อมต่อแอปทั้ง '+allApps().length+' รายการ...','✅ พร้อมใช้งาน'];
+    $('sStep').textContent=st[0];[1,2].forEach(k=>stepT.push(setTimeout(()=>$('sStep').textContent=st[k],SPLASH_MS*k*.36)));
+  }else $('sStep').textContent='';
 }
-function hideSplash(){clearTimeout(enterT);$('splash').classList.remove('on');startIdle()}
+function hideSplash(){
+  clearTimeout(enterT);stepT.forEach(clearTimeout);stepT=[];$('splash').classList.remove('on');startIdle();
+  const w=document.querySelector('.wrap');w.classList.add('intro');setTimeout(()=>w.classList.remove('intro'),1800); // การ์ดไหลเข้าทีละใบหลังซูมผ่านหน้าโลโก้
+}
 function startIdle(){clearTimeout(idleT);if(!vOpen()&&!splashOn()&&!$('modal').classList.contains('open')) idleT=setTimeout(()=>showSplash(true),IDLE_MS)}
 function stopIdle(){clearTimeout(idleT)}
 ['pointerdown','pointermove','touchstart','wheel','scroll','keydown'].forEach(ev=>addEventListener(ev,()=>{if(!splashOn()) startIdle()},{passive:true}));
@@ -377,6 +416,10 @@ function init(){
   applyTheme(store.get('sbk_hub_theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
   $('sLogo').innerHTML=LOGO.replace('id="a"','id="a2"').replace('url(#a)','url(#a2)');
   tick();setInterval(tick,1000);setupIcons();render();
+  const cols=['#a5b4fc','#5eead4','#fde047','#f9a8d4','#fff']; // ประกายลอยในหน้า Splash
+  for(let k=0;k<22;k++){const p=document.createElement('i'),z=3+Math.random()*5;p.className='pt';
+    p.style.cssText=`left:${Math.random()*100}%;width:${z}px;height:${z}px;background:${cols[k%5]};animation-duration:${6+Math.random()*7}s;animation-delay:${-Math.random()*8}s;--dx:${(Math.random()-.5)*160}px`;
+    $('splash').appendChild(p)}
   if(location.hash){openApp(location.hash.slice(1),false);hideSplash()} // ลิงก์ลัดเช่น #toilet เข้าแอปตรงๆ ไม่ผ่าน Splash
   else showSplash(false);
 }
