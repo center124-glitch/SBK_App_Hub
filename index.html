@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<!-- SBK App Hub v2 (โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
+<!-- SBK App Hub v3 (เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SBK App Hub</title>
@@ -204,7 +204,8 @@ const APPS=[
  {id:'preport',name:'รายงานบุคลิกภาพประจำวัน', desc:'Daily Personality Report สรุปผลรายวัน', path:'Daily-Personality-Report/', cat:'รายงาน', ico:'📊', g:'linear-gradient(135deg,#0ea5e9,#6366f1)', s:'#0ea5e966', c:'#0369a1'},
  {id:'incident',name:'แจ้งเหตุการณ์ / อุบัติเหตุ', desc:'บันทึกและแจ้งเหตุการณ์ผิดปกติหรืออุบัติเหตุ', path:'From-Incident-Accident/', cat:'ฟอร์ม', ico:'🚨', g:'linear-gradient(135deg,#ef4444,#f97316)', s:'#ef444466', c:'#dc2626'},
  {id:'tenant', name:'ตรวจความปลอดภัยร้านค้า', desc:'Tenant Safety Inspection ตรวจประเมินมาตรฐานร้านค้าผู้เช่า', path:'Tenant_Safety_Inspection_v2/', cat:'ตรวจประเมิน', ico:'🛡️', g:'linear-gradient(135deg,#10b981,#0d9488)', s:'#10b98166', c:'#047857'},
- {id:'toilet', name:'ตรวจเช็คห้องน้ำ', desc:'บันทึกการตรวจความสะอาดห้องน้ำประจำวัน', path:'Toilet-Inspection-Form/', cat:'ตรวจประเมิน', ico:'🚻', g:'linear-gradient(135deg,#06b6d4,#3b82f6)', s:'#06b6d466', c:'#0e7490'}
+ {id:'toilet', name:'ตรวจเช็คห้องน้ำ', desc:'บันทึกการตรวจความสะอาดห้องน้ำประจำวัน', path:'Toilet-Inspection-Form/', cat:'ตรวจประเมิน', ico:'🚻', g:'linear-gradient(135deg,#06b6d4,#3b82f6)', s:'#06b6d466', c:'#0e7490'},
+ {id:'shopdir',name:'ทำเนียบร้านค้า OPS', desc:'OPS Shop Directory ค้นหาข้อมูลร้านค้าภายในศูนย์', path:'OPS_Shop-Directory_v12/', cat:'ข้อมูล', ico:'🏬', g:'linear-gradient(135deg,#f97316,#db2777)', s:'#f9731666', c:'#c2410c'}
 ];
 /* ที่เก็บข้อมูลในเบราว์เซอร์ — ห่อ try/catch เพราะบางเครื่องปิด localStorage */
 const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
