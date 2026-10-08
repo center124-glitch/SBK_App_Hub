@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<!-- SBK App Hub v5 (ใช้งานล่าสุดแบบชิปเล็ก; v4: การ์ดสีสด, Responsive, เอฟเฟคก่อนเข้า; v3: เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
+<!-- SBK App Hub v6 (พื้นหลังอนิเมชัน; v5: ใช้งานล่าสุดแบบชิปเล็ก; v4: การ์ดสีสด, Responsive, เอฟเฟคก่อนเข้า; v3: เพิ่ม OPS Shop Directory; v2: โหมดมืด/สว่าง, Splash, Auto-lock, ปักหมุด, เพิ่มแอปเอง) — รวมแอประบบปฏิบัติการ SBK ไว้ในไฟล์เดียว -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SBK App Hub</title>
@@ -168,10 +168,19 @@ h1,h2,h3,.pf{font-family:'Prompt','Sarabun',sans-serif}
 @media(hover:hover){.rec:hover{border-color:var(--c);transform:translateY(-2px)}}
 .rec:active{transform:scale(.96)}
 .intro .recs{animation:rise .7s .15s both}
+/* ===== v6: พื้นหลังอนิเมชัน ===== */
+.blob{animation:drift 20s ease-in-out infinite alternate;will-change:transform}
+.b2{animation-duration:26s;animation-delay:-8s}.b3{animation-duration:23s;animation-delay:-14s}
+.b4{width:210px;height:210px;background:#fde047;top:10%;left:48%;animation-duration:30s;animation-delay:-5s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(70px,-50px) scale(1.2)}100%{transform:translate(-50px,60px) scale(.92)}}
+[data-theme=dark] .blob{opacity:.28}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+@media(max-width:600px){.blob{filter:blur(50px)}}
 </style>
 </head>
 <body>
-<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
 <!-- หน้าเปิด/หน้าพักจอ: แสดงโลโก้ วันที่ เวลา -->
 <div class="splash on" id="splash">
   <div class="aur a1"></div><div class="aur a2"></div><div class="aur a3"></div>
@@ -423,7 +432,55 @@ $('installBtn').onclick=()=>{
   else toast('มือถือ: เมนู ⋮ → "เพิ่มไปยังหน้าจอหลัก" · คอมพิวเตอร์: ไอคอนติดตั้งที่แถบที่อยู่ หรือเมนู → "ติดตั้ง SBK App Hub"');
 };
 
-/* ===== 8. เริ่มต้นระบบ ===== */
+/* ===== 8. พื้นหลังอนิเมชัน: ฟองลอย + จุดเชื่อมเส้น ตอบสนองต่อเมาส์/นิ้ว ===== */
+(function(){
+  const cv=$('bg'),cx=cv.getContext('2d');
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches; // ผู้ใช้ตั้งลดการเคลื่อนไหว → วาดภาพนิ่ง
+  let W=0,H=0,dpr=1,P=[],B=[],mx=-999,my=-999;
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  const COL=[[99,102,241],[20,184,166],[236,72,153],[245,158,11]];
+  const pick=()=>COL[Math.floor(rnd(0,4))];
+  function size(){
+    dpr=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;
+    cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.min(70,Math.round(W*H/20000)); // จำนวนจุดปรับตามขนาดจอ (มือถือน้อยลง ประหยัดแบตฯ)
+    P=Array.from({length:n},()=>({x:rnd(0,W),y:rnd(0,H),vx:rnd(-.25,.25),vy:rnd(-.25,.25),r:rnd(1.5,3.2),c:pick()}));
+    B=Array.from({length:7},()=>({x:rnd(0,W),y:rnd(0,H),r:rnd(16,46),vy:-rnd(.15,.45),ph:rnd(0,6.28),c:pick()}));
+  }
+  const paused=()=>document.hidden||vOpen()||splashOn(); // หยุดวาดเมื่อซ่อนแท็บ/เปิดแอป/อยู่หน้า Splash
+  function draw(t){
+    const dark=document.documentElement.dataset.theme==='dark',a=dark?.75:.5,la=dark?.28:.2;
+    cx.clearRect(0,0,W,H);
+    for(const b of B){
+      b.y+=b.vy;b.x+=Math.sin(t/1800+b.ph)*.3;
+      if(b.y<-b.r*2){b.y=H+b.r*2;b.x=rnd(0,W)}
+      const g=cx.createRadialGradient(b.x,b.y,b.r*.1,b.x,b.y,b.r);
+      g.addColorStop(0,`rgba(${b.c},${dark?.05:.04})`);g.addColorStop(1,`rgba(${b.c},${dark?.22:.16})`);
+      cx.fillStyle=g;cx.beginPath();cx.arc(b.x,b.y,b.r,0,6.283);cx.fill();
+    }
+    for(let i=0;i<P.length;i++){
+      const p=P[i];p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      const dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy)||1;
+      if(d<120){const f=(1-d/120)*.7;p.x+=dx/d*f;p.y+=dy/d*f} // ผลักเบาๆ เมื่อเมาส์/นิ้วเข้าใกล้
+      cx.fillStyle=`rgba(${p.c},${a})`;cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.283);cx.fill();
+      for(let j=i+1;j<P.length;j++){
+        const q=P[j],ex=p.x-q.x,ey=p.y-q.y,e=ex*ex+ey*ey;
+        if(e<16900){cx.strokeStyle=`rgba(${p.c},${(1-e/16900)*la})`;cx.lineWidth=1;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke()}
+      }
+    }
+  }
+  function loop(t){if(!paused())draw(t);requestAnimationFrame(loop)}
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
+  addEventListener('pointerup',()=>{mx=my=-999},{passive:true});
+  let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{
+    if(innerWidth!==W) size(); else {H=innerHeight;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)} // iOS แถบที่อยู่ย่อ/ขยาย ไม่สุ่มจุดใหม่
+  },200)});
+  size();
+  if(still) draw(0); else requestAnimationFrame(loop);
+})();
+
+/* ===== 9. เริ่มต้นระบบ ===== */
 function init(){
   applyTheme(store.get('sbk_hub_theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
   $('sLogo').innerHTML=LOGO.replace('id="a"','id="a2"').replace('url(#a)','url(#a2)');
