@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<!-- SBK App Hub v8 — v8: โลโก้มีมุมโค้ง + เส้นขอบไล่สี แสดงเหมือนกันทุกแพลตฟอร์ม (หน้าเว็บ/แท็บ/iOS/Android) เหมือน Dashboard Hub และ Center Hub
+<!-- SBK App Hub v9 — v9: ไอคอนติดตั้งแยก 2 ชุด มุมโค้งโปร่งใสสำหรับ PC (Windows/macOS) และเต็มกรอบสำหรับ iOS/Android
+     v8 — v8: โลโก้มีมุมโค้ง + เส้นขอบไล่สี แสดงเหมือนกันทุกแพลตฟอร์ม (หน้าเว็บ/แท็บ/iOS/Android) เหมือน Dashboard Hub และ Center Hub
      v7 — ตรวจทาน Logic/Edge case ทั้งไฟล์ + Error Handling + Responsive (มือถือ/แท็บเล็ต/โน้ตบุ๊ก/เดสก์ท็อป, iOS/Android)
      v7: เวลาไทยแม่นยำไม่ขึ้นกับ timezone เครื่อง, ปุ่ม Back ไม่สะสมประวัติ, ลิงก์ #id ผิดไม่ค้าง, หน้าโหลดแอปมีสถานะ ช้า/ผิดพลาด/ลองใหม่,
          ตรวจข้อมูลใน localStorage ที่เสียหาย, ไอคอนอีโมจิไม่ถูกตัดครึ่ง, การ์ดกดด้วยคีย์บอร์ดได้, แจ้งเตือนออฟไลน์, จับ Error ทั้งหน้า
@@ -410,24 +411,28 @@ function logoSvg(p,icon){
   `</svg>`;
 }
 function setupIcons(){
-  $('favicon').href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(logoSvg('f',false)); // แท็บเบราว์เซอร์: แบบมุมโค้ง
-  const img=new Image();
-  img.onload=()=>{
-    try{
-      const mk=n=>{const c=document.createElement('canvas');c.width=c.height=n;c.getContext('2d').drawImage(img,0,0,n,n);return c.toDataURL('image/png')};
-      const p180=mk(180),p192=mk(192),p512=mk(512);
-      $('touchicon').href=p180;
+  /* ไอคอน 2 ชุด เพราะแต่ละระบบปฏิบัติการตัดมุมไม่เหมือนกัน:
+     - "any" (มุมโค้ง พื้นมุมโปร่งใส) → Windows / macOS / ChromeOS / แท็บเบราว์เซอร์ ซึ่งแสดงไอคอนตามไฟล์จริง ไม่ตัดมุมให้
+     - "maskable" + apple-touch-icon (เต็มกรอบสี่เหลี่ยม) → Android / iOS ซึ่งตัดมุมเอง (ถ้าใส่แบบมุมโค้ง iOS จะเติมมุมสีดำ)
+     v8 ใช้แบบเต็มกรอบอย่างเดียว ไอคอนบนเดสก์ท็อป PC จึงเป็นสี่เหลี่ยมไม่ตัดมุม */
+  try{
+    const rounded=logoSvg('f',false),full=logoSvg('i',true);
+    $('favicon').href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(rounded);
+    const load=svg=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+    const mk=(img,n,pad=0)=>{const c=document.createElement('canvas');c.width=c.height=n;const p=Math.round(n*pad);c.getContext('2d').drawImage(img,p,p,n-2*p,n-2*p);return c.toDataURL('image/png')};
+    Promise.all([load(rounded),load(full)]).then(([r,fu])=>{
+      const any192=mk(r,192,.04),any512=mk(r,512,.04),mask512=mk(fu,512),touch180=mk(fu,180);
+      $('touchicon').href=touch180;
+      const png=document.createElement('link');png.rel='icon';png.type='image/png';png.sizes='192x192';png.href=any192;document.head.appendChild(png);
       /* manifest เป็น blob: URL — ค่า scope/start_url ต้องเป็น URL เต็ม ไม่งั้นจะถูกตีความเทียบกับ blob: แล้วใช้ไม่ได้ */
       const start=location.href.split('#')[0];
       const m={name:'SBK App Hub',short_name:'SBK Hub',start_url:start,scope:new URL('./',start).href,display:'standalone',
         background_color:'#eef2ff',theme_color:'#4f46e5',lang:'th',
-        icons:[{src:p192,sizes:'192x192',type:'image/png',purpose:'any'},{src:p512,sizes:'512x512',type:'image/png',purpose:'any'},{src:p512,sizes:'512x512',type:'image/png',purpose:'maskable'}]};
+        icons:[{src:any192,sizes:'192x192',type:'image/png',purpose:'any'},{src:any512,sizes:'512x512',type:'image/png',purpose:'any'},{src:mask512,sizes:'512x512',type:'image/png',purpose:'maskable'}]};
       const l=document.createElement('link');l.rel='manifest';
       l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l);
-    }catch(e){console.warn('สร้างไอคอนไม่สำเร็จ (ไม่กระทบการใช้งาน)',e)}
-  };
-  img.onerror=()=>console.warn('โหลดโลโก้สำหรับไอคอนไม่สำเร็จ');
-  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(logoSvg('i',true));
+    }).catch(e=>console.warn('สร้างไอคอนไม่สำเร็จ (ไม่กระทบการใช้งาน)',e));
+  }catch(e){console.warn('สร้างไอคอนไม่สำเร็จ (ไม่กระทบการใช้งาน)',e)}
 }
 
 /* ===== 5. แสดงผลการ์ด ===== */
