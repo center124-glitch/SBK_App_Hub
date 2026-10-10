@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<!-- SBK App Hub v9 — v9: ไอคอนติดตั้งแยก 2 ชุด มุมโค้งโปร่งใสสำหรับ PC (Windows/macOS) และเต็มกรอบสำหรับ iOS/Android
+<!-- SBK App Hub v11 — v11: แก้แถบแจ้ง "ออฟไลน์" แสดงผิดขณะเปิดแอปทั้งที่ออนไลน์อยู่
+     v10 — v10: เพิ่มแอป "ตรวจประเมินสมรรถนะการบริการ" (Security_Service_Audit_Form)
+     v9 — v9: ไอคอนติดตั้งแยก 2 ชุด มุมโค้งโปร่งใสสำหรับ PC (Windows/macOS) และเต็มกรอบสำหรับ iOS/Android
      v8 — v8: โลโก้มีมุมโค้ง + เส้นขอบไล่สี แสดงเหมือนกันทุกแพลตฟอร์ม (หน้าเว็บ/แท็บ/iOS/Android) เหมือน Dashboard Hub และ Center Hub
      v7 — ตรวจทาน Logic/Edge case ทั้งไฟล์ + Error Handling + Responsive (มือถือ/แท็บเล็ต/โน้ตบุ๊ก/เดสก์ท็อป, iOS/Android)
      v7: เวลาไทยแม่นยำไม่ขึ้นกับ timezone เครื่อง, ปุ่ม Back ไม่สะสมประวัติ, ลิงก์ #id ผิดไม่ค้าง, หน้าโหลดแอปมีสถานะ ช้า/ผิดพลาด/ลองใหม่,
@@ -150,8 +152,9 @@ h1,h2,h3{font-family:'Prompt','Sarabun',sans-serif}
 #toast.show{transform:translate(-50%,0);opacity:1}
 #toast[data-type=ok]{background:#15803d}
 #toast[data-type=err]{background:#b91c1c}
-#net{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translate(-50%,-160%);z-index:121;background:#b91c1c;color:#fff;font:600 .85rem 'Prompt',sans-serif;padding:8px 16px;border-radius:999px;transition:transform .35s;box-shadow:0 8px 20px #0004;white-space:nowrap}
-#net.show{transform:translate(-50%,0)}
+/* ซ่อนด้วย visibility+opacity ไม่ใช่แค่เลื่อนขึ้นพ้นจอ — v10/v14 ย้ายแถบลงใต้แถบเครื่องมือขณะเปิดแอป ระยะเลื่อนจึงไม่พอ แถบ "ออฟไลน์" โผล่ค้างทั้งที่ออนไลน์อยู่ */
+#net{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translate(-50%,-160%);z-index:121;background:#b91c1c;color:#fff;font:600 .85rem 'Prompt',sans-serif;padding:8px 16px;border-radius:999px;transition:transform .35s,opacity .35s,visibility 0s .35s;box-shadow:0 8px 20px #0004;white-space:nowrap;visibility:hidden;opacity:0;pointer-events:none}
+#net.show{transform:translate(-50%,0);visibility:visible;opacity:1;transition:transform .35s,opacity .35s}
 body.noscroll #net{top:calc(66px + env(safe-area-inset-top))} /* ขณะเปิดแอป เลื่อนแถบออฟไลน์ลงใต้แถบเครื่องมือ ไม่ทับชื่อแอป/ปุ่มกลับ */
 
 /* ===== หน้าต่างเพิ่มแอป ===== */
@@ -333,7 +336,8 @@ const APPS=[
  {id:'incident',name:'แจ้งเหตุการณ์ / อุบัติเหตุ', desc:'บันทึกและแจ้งเหตุการณ์ผิดปกติหรืออุบัติเหตุ', path:'From-Incident-Accident/', cat:'ฟอร์ม', ico:'🚨', g:'linear-gradient(135deg,#ef4444,#f97316)', s:'#ef444466', c:'#dc2626'},
  {id:'tenant', name:'ตรวจความปลอดภัยร้านค้า', desc:'Tenant Safety Inspection ตรวจประเมินมาตรฐานร้านค้าผู้เช่า', path:'Tenant_Safety_Inspection_v2/', cat:'ตรวจประเมิน', ico:'🛡️', g:'linear-gradient(135deg,#10b981,#0d9488)', s:'#10b98166', c:'#047857'},
  {id:'toilet', name:'ตรวจเช็คห้องน้ำ', desc:'บันทึกการตรวจความสะอาดห้องน้ำประจำวัน', path:'Toilet-Inspection-Form/', cat:'ตรวจประเมิน', ico:'🚻', g:'linear-gradient(135deg,#06b6d4,#3b82f6)', s:'#06b6d466', c:'#0e7490'},
- {id:'shopdir',name:'ทำเนียบร้านค้า OPS', desc:'OPS Shop Directory ค้นหาข้อมูลร้านค้าภายในศูนย์', path:'OPS_Shop-Directory_v12/', cat:'ข้อมูล', ico:'🏬', g:'linear-gradient(135deg,#f97316,#db2777)', s:'#f9731666', c:'#c2410c'}
+ {id:'shopdir',name:'ทำเนียบร้านค้า OPS', desc:'OPS Shop Directory ค้นหาข้อมูลร้านค้าภายในศูนย์', path:'OPS_Shop-Directory_v12/', cat:'ข้อมูล', ico:'🏬', g:'linear-gradient(135deg,#f97316,#db2777)', s:'#f9731666', c:'#c2410c'},
+ {id:'svcaudit',name:'ตรวจประเมินสมรรถนะการบริการ', desc:'Service Audit ตรวจประเมินการบริการ บุคลิกภาพ และการสื่อสารของเจ้าหน้าที่', path:'Security_Service_Audit_Form/', cat:'ตรวจประเมิน', ico:'🤝', g:'linear-gradient(135deg,#0d9488,#6366f1)', s:'#0d948866', c:'#0f766e'}
 ];
 const CUSTOM_STYLE={g:'linear-gradient(135deg,#64748b,#334155)',s:'#64748b66',c:'#475569'};
 const K={custom:'sbk_hub_custom',fav:'sbk_hub_fav',recent:'sbk_hub_recent',theme:'sbk_hub_theme'}; // คีย์เดิมของ v6 — ข้อมูลผู้ใช้ไม่หาย
